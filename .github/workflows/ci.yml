@@ -10,8 +10,20 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: presentation.tex
-      - name: Upload PDF file
+      - name: Gather artifacts
+        run: |
+          mkdir -p public
+          mv *.pdf public/
+          mv index.html public/
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: presentation
-          path: presentation.pdf
+          path: public
+      - name: Publish to GitHub pages
+        uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: gh-pages
+          build_dir: public/
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
